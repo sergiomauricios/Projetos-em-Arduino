@@ -1,0 +1,185 @@
+
+import processing.serial.*;     // importa biblioteca serial
+Serial arduinoport;                  // declarar uma porta serial
+float x, y;                       // // variável para armazenar coordenadas x e y para vértices   
+int radius = 350;               // define o raio dos objetos
+int w = 300;                    // define um valor de largura arbitrária
+int degree = 0;                 // posição do servo em graus
+int value = 0;                  // valor do sensor
+int motion = 0;                 // valor para armazenar o caminho que o servo está fazendo
+int[] newValue = new int[181];  // cria uma matriz para armazenar cada novo valor do sensor para cada posição do servo
+int[] oldValue = new int[181];  // cria uma matriz para armazenar os valores anteriores.
+PFont myFont;                   // fontes de configuração no processamento
+int radarDist = 0;              // define valor para configurar rótulos de distância de radar
+int firstRun = 0;               // valor para ignorar o movimento de disparo nas primeiras 2 varreduras
+
+PImage ROTA5;
+
+// * cria plano de fundo e buffer serial * /
+void setup(){
+// configura o tamanho do fundo, cor e fonte.
+size(1000, 700);
+background (0); // 0 = preto
+ROTA5 = loadImage("ROTA5.jpg");
+myFont = createFont("verdana", 12);
+textFont(myFont);
+// configura a porta serial e o buffer
+arduinoport = new Serial(this, "COM5", 9600);
+}
+
+/* desenha a tela */
+void draw(){
+fill(0,0,10);                              //define as seguintes formas para ser preto
+noStroke();                           //define as seguintes formas para não ter contorno
+ellipse(radius, radius, 750, 750);    // desenha um círculo com uma largura / altura = 750 com a posição central (x e y) definida pelo raio
+image(ROTA5,0,0);
+rectMode(CENTER);                     // define o seguinte retângulo para ser desenhado em torno de seu centro
+//rect(350,402,800,100);                // desenha retângulo (x, y, largura, altura)
+if (degree >= 180) {                  // na extrema direita, em seguida, define movimento = 1 / se verdade, vamos ir da direita para a esquerda
+motion = 1;                         // isso muda a animação para correr da direita para a esquerda
+
+}
+if (degree <= 1) {                    // servo a 0 graus, então estamos prestes a ir da esquerda para a direita
+motion = 0;                         // isso define a animação da esquerda para a direita
+}
+
+strokeWeight(7);                      // define a espessura das linhas
+if (motion == 0) {                    // vai da esquerda para a direita
+for (int i = 0; i <= 20; i++) {     // desenha 20 linhas com cor de desvanecimento a 1 grau a mais do que a última
+stroke(0, (10*i), 0);             //define a cor do traçado (Vermelho, Verde, Azul) baseia-se no valor de i
+line(radius, radius, radius + cos(radians(degree+(180+i)))*w, radius + sin(radians(degree+(180+i)))*w); //linha (inicia x, inicia y, final x, final y)
+}
+} else {                              // vai da direita para a esquerda
+for (int i = 20; i >= 0; i--) {     // desenha 20 linhas com cor desbotada
+stroke(0,200-(10*i), 0);          // usa valores RGB padrão, cada um entre 0 e 255
+line(radius, radius, radius + cos(radians(degree+(180+i)))*w, radius + sin(radians(degree+(180+i)))*w);
+}
+}
+ // Configura as formas feitas a partir dos valores do sensor //
+noStroke();                           //sem contorno
+// primeira varredura //
+fill(0,50,0);                         // define a cor de preenchimento da forma (vermelho, verde, azul)
+beginShape();                         // começar a desenhar a forma
+for (int i = 0; i < 180; i++) {     //cada grau na matriz
+x = radius + cos(radians((180+i)))*((oldValue[i])); // cria coordenada x
+y = radius + sin(radians((180+i)))*((oldValue[i])); // cria coordenada y
+vertex(x, y);                     // traça os vértices
+}
+endShape();                           // forma final
+/*segunda varredura */
+fill(0,110,0);
+beginShape();
+for (int i = 0; i < 180; i++) {
+x = radius + cos(radians((180+i)))*(newValue[i]);
+y = radius + sin(radians((180+i)))*(newValue[i]);
+vertex(x, y);
+}
+endShape();
+/* média */
+fill(0,170,0);
+beginShape();
+for (int i = 0; i < 180; i++) {
+x = radius + cos(radians((180+i)))*((newValue[i]+oldValue[i])/2); // cria média
+y = radius + sin(radians((180+i)))*((newValue[i]+oldValue[i])/2);
+vertex(x, y);
+}
+endShape();
+/* após as 2 primeiras varreduras, destaca o movimento com o círculo vermelho*/
+if (firstRun >= 180) {
+stroke(150,0,0);
+strokeWeight(1);
+noFill();
+for (int i = 0; i < 180; i++) {
+if (oldValue[i] - newValue[i] > 35 || newValue[i] - oldValue[i] > 35) {
+x = radius + cos(radians((180+i)))*(newValue[i]);
+y = radius + sin(radians((180+i)))*(newValue[i]);
+ellipse(x, y, 10, 10); 
+}
+}
+}
+/*define os anéis de distância do radar e colocar seus valores, 50, 100, 150 etc. */
+for (int i = 0; i <=6; i++){
+noFill();
+strokeWeight(1);
+stroke(0, 255-(30*i), 0);
+ellipse(radius, radius, (100*i), (100*i)); 
+fill(300, 30, 0);
+noStroke();
+text(Integer.toString(radarDist+50), 380, (305-radarDist), 50, 50);
+radarDist+=50;
+}
+radarDist = 0;
+/*93/5000
+desenha as linhas de graus no radar a cada 30 graus e escreva seus valores 180, 210, 240 etc. */
+for (int i = 0; i <= 6; i++) {
+strokeWeight(1);
+stroke(0, 55, 0);
+line(radius, radius, radius + cos(radians(180+(30*i)))*w, radius + sin(radians(180+(30*i)))*w);
+fill(0, 55, 0);
+strokeWeight(1);
+stroke(0, 55, 0);
+line(radius, radius, radius + cos(radians(360+(30*i)))*w, radius + sin(radians(360+(30*i)))*w);
+fill(0, 150, 0);
+noStroke();
+if (0+(30*i) >= 300) {
+text(Integer.toString(0+(30*i)), (radius+10) - cos(radians(0+(30*i)))*(w+10), (radius+10) - sin(radians(0+(30*i)))*(w+10), 25,50);
+//if (0+(30*i) < 180) {
+//text(Integer.toString(360+(30*i)), (radius+10) + cos(radians(360+(30*i)))*(w+10), (radius+10) + sin(radians(360+(30*i)))*(w+10), 25,50);
+} else {
+text(Integer.toString(0+(30*i)), (radius+10) - cos(radians(0+(30*i)))*w, (radius+10) - sin(radians(0+(30*i)))*w, 60,40);
+}
+}
+/*Escreve o texto e valores de informação. */
+//noStroke();
+//fill(0);
+//rect(350,402,800,100);
+fill(200, 100, 50);
+text("DIREÇÃO ALV.: "+Integer.toString(degree), 100, 150, 150, 50);         //Integer.toString para converter numérico em string, pois o texto () somente gera strings
+text("DISTANCIA ALV.: "+Integer.toString(value), 100, 170, 150, 50); // texto (string, x, y, largura, altura)
+fill(0);
+rect(70,60,150,100);
+fill(0, 300, 0); 
+text("RADAR PRIMARIO:", 100, 50, 150, 50);
+fill(0,50,0);
+rect(30,53,10,10);
+text("1ª VARREDURA", 115, 70, 150, 50);
+fill(0,110,0);
+rect(30,73,10,10);
+text("2ª VARREDURA", 115, 90, 150, 50);
+fill(0,170,0);
+rect(30,93,10,10);
+text("VERIFICAÇÃO", 115, 110, 150, 50);
+noFill();
+stroke(150,0,0);
+strokeWeight(1);
+ellipse(29, 113, 10, 10); 
+fill(150,0,0);
+text("ALVO", 115, 130, 150, 50);
+fill(0,450,500);
+text("RADAR DE ROTA ", 940, 320, 250, 50);
+fill(0,400,500);
+text("SERGIO MAURICIO", 935, 340, 250, 50);
+fill(0,450,500);
+text("ENGENHARIA TELECOM UFSM", 900, 300, 250, 50);
+fill(0,450,500);
+text("2019", 980, 360, 250, 50);
+}
+/* obtem valores da porta serial */
+void serialEvent (Serial arduinoport) {
+String xString = arduinoport.readStringUntil('\n');  // le a porta serial até uma nova linha
+if (xString != null) {  // se houver dados entre as novas linhas
+xString = trim(xString); // livrar-se de qualquer espaço em branco apenas no caso
+String getX = xString.substring(1, xString.indexOf("V")); // obtem o valor da posição do servo
+String getV = xString.substring(xString.indexOf("V")+1, xString.length()); //obtem o valor da leitura do sensor
+degree = Integer.parseInt(getX); // define os valores para variáveis
+value = Integer.parseInt(getV);
+oldValue[degree] = newValue[degree]; // armazena os valores nas matrizes.
+newValue[degree] = value;  
+/* define um contador para permitir as duas primeiras varreduras do servo */
+firstRun++;
+if (firstRun > 360) {
+firstRun = 360; // mantem o valor em 360 
+}
+}
+}
+ 
