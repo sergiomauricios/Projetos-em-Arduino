@@ -1,0 +1,55 @@
+//CONTADOR BINÁRIO DE 8 BITS
+
+//VARIÁVEIS GLOBAIS
+//Constantes
+const int LedPinMenor = 3; //Led com pino de menor valor
+const int PinBotao = 2; // Pino do Botao
+//Variaveis
+int bits[8]; // Armazenar o Bit em 8 casas [0,0,0,0,0,0,0,0,]
+int EstadodoBotaoAntes = LOW; //Estado anterior do botão, iniciando como desligado
+int EstadoAtualDoBotao = LOW; //Estado Atual do botao
+
+
+void setup() {
+//Função para declarar todos os pinos apenas um vez
+for (int i = LedPinMenor; i <= LedPinMenor + 8; i++) {
+  pinMode (PinBotao, INPUT); //declara o pino do botão como saida
+}
+pinMode (PinBotao,INPUT); //Mantem a condição do botão, sem desligar os leds
+}
+
+void loop() {
+
+EstadoAtualDoBotao = digitalRead(PinBotao); //Declarar a porta digital do botao
+if (EstadoAtualDoBotao == HIGH && EstadoAtualDoBotao != EstadodoBotaoAntes) {
+
+  VaiUm(); // carry da função 
+
+  LedsBinario(); //Localiza o valor de cada LED na placa (Ligado = 1 e Desligado = 0)
+  
+}
+
+EstadodoBotaoAntes = EstadoAtualDoBotao; //Manter a condição do botao
+
+}
+
+//Função carry que define quais portas devem ser acionadas na conversão de decimal para bínario
+
+void VaiUm(){
+  int carry = 1; //Declara a variavel carry começando com valor 1
+
+  //Função para adicionar 1 ou zero em cada espaço da matriz {0,0,0,0,0,0,0,0}
+  for (int i = 0; i < 8; i++){
+    //Conversao de decimal para Binário
+    carry = bits[i] + carry; // chama o próximo espaço da matriz
+    bits [i] = carry % 2; //divide o carry por 2 e adiciona o resto em módulo (1 ou zero) dentro da matriz bits
+    carry = carry / 2; // dividir o carry por 2 e adicionar o valor ao carry do próximo ciclo até i < 8
+  }
+  
+  }
+//Função que vai ler as matrizes de bits que devem conter os valores 1 ou zero em sequencia
+void LedsBinario(){
+  for (int i = 0; i < 8; i++){
+    digitalWrite(LedPinMenor + i, bits[i]);
+    
+  }
