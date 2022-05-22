@@ -1,0 +1,535 @@
+//Variaveis Globais
+String EntradaDeDados = ""; // Armazenar a entrada de dados da porta serial
+
+char i; // Variavel de tipo char, para armazenar os caracteres individualmente
+
+int TotalDeDados = 0; //armazena o tamanho do código
+int espera = 150; // armazena o tempo de espera entre os pulsos
+
+const int SOM = 6; //SOM ligado na porta 6
+const int LED = 12; // LED ligdo na porta 12
+
+void setup() {
+
+Serial.begin(9600); // código para iniciar a comunicação serial
+pinMode(SOM,OUTPUT); //SOM configurado para receber informações da placa
+pinMode(LED,OUTPUT); //LED configurado para receber informações da placa
+Serial.println("DIGITE A MENSAGEM"); //Escreve uma mensagem no monitor serial
+}
+//Funções
+
+void ponto(){
+  digitalWrite(SOM,HIGH); //SOM ligado
+  tone(SOM,500,50); // Define a o tom do som e o volume
+  digitalWrite(LED,HIGH); //LED ligado
+  delay(30);//atraso de 30 milissegundos
+  digitalWrite(SOM,LOW); //SOM desligado
+  digitalWrite(LED,LOW); //LED desligado
+  Serial.print("."); //Escreve um ponto no monitor serial
+  delay(250); //atraso de 250 milissegundos
+}
+
+void traco(){
+  digitalWrite(SOM,HIGH); //SOM ligado
+  tone(SOM,500,50);// Define a o tom do som e o volume
+  digitalWrite(LED,HIGH);//LED ligado
+  delay(230);//atraso de 230 milissegundos
+  digitalWrite(SOM,LOW);//SOM desligado
+  digitalWrite(LED,LOW);//LED desligado
+  Serial.print("-");//Escreve um traço no monitor serial
+  delay(250);//atraso de 250 milissegundos
+}
+
+void Letras(){ //transforma os caracteres em codigo morse
+  switch(i){
+    case 'A':           // se i for A, ele vai reproduzir a função dentro da case
+    case 'a':           // se i for a , ele vai reproduzir a função dentro da case
+  ponto();              //reproduz a função ponto
+  delay(espera);        //espera o tempo determinado
+  traco();              //reproduz a função traço
+  delay(espera);        //espera o tempo determinado
+  Serial.print(" ");    //deixa um espaço para separar do próximo caractere
+    break;
+    case 'B':
+    case 'b':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'C':
+    case 'c':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'D':
+    case 'd':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'E':
+    case 'e':
+   ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'F':
+    case 'f':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'G':
+    case 'g':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'H':
+    case 'h':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'I':
+    case 'i':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'J':
+    case 'j':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'K':
+    case 'k':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'L':
+    case 'l':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'M':
+    case 'm':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'N':
+    case 'n':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'O':
+    case 'o':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'P':
+    case 'p':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'Q':
+    case 'q':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'R':
+    case 'r':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'S':
+    case 's':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'T':
+    case 't':
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'U':
+    case 'u':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'V':
+    case 'v':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'W':
+    case 'w':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'X':
+    case 'x':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'Y':
+    case 'y':
+   traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'Z':
+    case 'z':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '1':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '2':
+   ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '3':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '4':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '5':
+   ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '6':
+   traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '7':
+   traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '8':
+ traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '9':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '0':
+   traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '.':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case ',':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+   traco();
+  delay(espera);
+   traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+ case '?':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+   break;
+  case '!':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case ' ': //função para o espaço entre uma palavra e outra
+    delay(espera); 
+    Serial.print("/ "); 
+     break;
+    default: 
+    delay(250);
+    break;
+ 
+  }
+}
+void LerDados(){ //função para ler cada caracter da string
+  TotalDeDados = EntradaDeDados.length(); //pega o tamanho da escrita
+  for(int x = 0; x <=  TotalDeDados; x++){ //repete até chegar ao fim do tamanho da escrita
+    i = EntradaDeDados.charAt(x); //obtem o caracter na posição x
+    Letras(); //Lê a letra em código morse
+  }
+}
+
+
+void loop() {
+while (Serial.available()) { //quando algo vem através de série
+  char Digito = (char)Serial.read(); //pega o novo bity
+  EntradaDeDados += Digito; //adiciona ao EntradaDeDados
+  if (Digito == '\n') { //se receber como CR
+    Serial.println(EntradaDeDados); //repete a palavra escrita no portal serial
+    LerDados(); //chama a função LerDados
+    Serial.println(); 
+  }
+}
+delay(1000); //atraso entre as strings
+EntradaDeDados = ""; //redefine a string
+}
+ 
