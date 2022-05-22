@@ -1,0 +1,568 @@
+//Código para transformar palavras em Código Morse
+
+//Biblioteca
+#include <Servo.h>
+
+
+//Variaveis Globais
+String EntradaDeDados = ""; //Armazenar a entrada de dados da porta serial
+
+char i; // Variavel de tipo char, para armazenar os caracteres individualmente
+
+int TotalDeDados = 0; //Variavel para armazenar o tamanho do código em numero de caracteres
+int espera = 150; // Armazenar o tempo de espera entre os pulsos
+
+//Pinos
+const int SOM = 6; //SOM ligado na porta 6 do arduino
+const int LED = 13; // LED ligado na porta 13 do arduino
+
+//Pinos para motores
+Servo caneta; //Variavel para Micro servo 180 graus
+Servo esteira; //Variavel para o motor 360 graus
+const int motor180 = 3; //Declara o motor180 no pino 3 do arduino
+const int motor360 = 5; //Declara o motor360 no pino 5 do arduino
+
+
+void setup() {
+  Serial.begin(9600);//Código para iniciar a comunicação serial
+  pinMode(SOM,OUTPUT); //SOM configurado para receber informações da placa
+  pinMode(LED,OUTPUT); //LED configurado para receber informações da placa
+  Serial.println("DIGITE A MENSAGEM");//Escreve o DIGITE A MENSAGEM no monitor serial
+//Configuração dos motores
+caneta.attach(motor180);  //configura o servo motor180 na placa
+esteira.attach(motor360); //configura o motor360 na placa
+caneta.write(0); //Inicia o micro servo na posição zero
+
+
+}
+//Função para Ponto e Traço
+void ponto(){
+  digitalWrite(SOM,HIGH); //SOM ligado
+  tone(SOM,500,50); //Define o tom e volume do som
+  digitalWrite(LED,HIGH);//LED ligado
+  caneta.write(10); //Servo motor na posição 10 graus
+  delay(100);//Atraso de 100 milissegundos
+  digitalWrite(SOM,LOW); //SOM desligado
+  digitalWrite(LED,LOW); //LED desligado
+  Serial.print("."); //Escreve um ponto no monitor serial
+  caneta.write(0); //Servo motor volta para posição zero
+  delay(250); //Atraso de 250 milissegundos  
+}
+
+void traco(){
+  digitalWrite(SOM,HIGH); //SOM ligado
+  tone(SOM,500,50); //Define o tom e volume do SOM
+  digitalWrite(LED,HIGH); //LED ligado
+  caneta.write(10); //Servo motor na posição 10 graus
+  delay(230); //Atraso de 230 milissegundos
+  digitalWrite(SOM,LOW); //SOM desligado
+  digitalWrite(LED,LOW); //LED desligado
+  Serial.print("-"); //Escrever um traço no monitor serial
+  caneta.write(0); //Servo motor volta para posição zero
+  delay(250); //Atraso de 250 milissegundos
+  
+}
+
+//Funções para cada DIGITO
+void Letras(){ //vai transformar caracteres em código Morse
+  switch (i){
+    case 'A': // Se i for A, ele vai reproduzir a função dentro da case 
+    case 'a': // Se i for a, ele vai reproduzir a função dentro da case
+    ponto();  // Chama a função ponto para dentro da case
+    delay(espera); //Espera o tempo declarado na variavel espera
+    traco();  //Chama a função traco para dentro da case
+    delay(espera); //Espera o tempo declarado na variavel espera
+    Serial.print(" "); //Deixa um espaço em branco no monitor serial
+    break; //Termina a reprodução da case
+    case 'B':
+    case 'b':
+    traco();
+    delay(espera);
+    ponto();
+    delay(espera);
+    ponto();
+    delay(espera);
+    ponto();
+    delay(espera);
+    Serial.print(" ");
+    break;
+    case 'C':
+    case 'c':
+    traco();
+    delay(espera);
+    ponto();
+    delay(espera);
+    traco();
+    delay(espera);
+    ponto();
+    delay(espera);
+    Serial.print(" ");
+    break;
+    case 'D':
+    case 'd':
+    traco ();
+    delay(espera);
+    ponto();
+    delay(espera);
+    ponto();
+    delay(espera);
+    Serial.print(" ");
+    break;
+    case 'E':
+    case 'e':
+    ponto();
+    delay(espera);
+    Serial.print(" ");
+    break;
+    case 'F':
+    case 'f':
+    ponto();
+    delay(espera);
+    ponto();
+    delay(espera);
+    traco();
+    delay(espera);
+    ponto();
+    delay(espera);
+    Serial.print(" ");
+    break;
+    case 'G':
+    case 'g':
+    traco();
+    delay(espera);
+    traco();
+    delay(espera);
+    ponto();
+    delay(espera);
+    Serial.print(" ");
+    break;
+    case 'H':
+    case 'h':
+    ponto();
+    delay(espera);
+    ponto();
+    delay(espera);
+    ponto();
+    delay(espera);
+    ponto();
+    delay(espera);
+    Serial.print(" ");
+    break;
+    case 'I':
+    case 'i':
+    ponto();
+    delay(espera);
+    ponto();
+    delay(espera);
+    Serial.print(" ");
+    break;
+    case 'J':
+    case 'j':
+    ponto();
+    delay(espera);
+    traco();
+    delay(espera);
+    traco();
+    delay(espera);
+    traco();
+    delay(espera);
+    Serial.print(" ");
+    break;
+case 'K':
+    case 'k':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'L':
+    case 'l':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'M':
+    case 'm':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'N':
+    case 'n':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'O':
+    case 'o':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'P':
+    case 'p':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'Q':
+    case 'q':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'R':
+    case 'r':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'S':
+    case 's':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'T':
+    case 't':
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'U':
+    case 'u':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'V':
+    case 'v':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'W':
+    case 'w':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'X':
+    case 'x':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'Y':
+    case 'y':
+   traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case 'Z':
+    case 'z':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '1':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '2':
+   ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '3':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '4':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '5':
+   ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '6':
+   traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '7':
+   traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '8':
+ traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '9':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '0':
+   traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case '.':
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+    case ',':
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+   traco();
+  delay(espera);
+   traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+ case '?':
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  ponto();
+  delay(espera);
+  Serial.print(" ");
+   break;
+  case '!':
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  ponto();
+  delay(espera);
+  traco();
+  delay(espera);
+  traco();
+  delay(espera);
+  Serial.print(" ");
+    break;
+ case ' ': //Função para separar as palavras em Morse
+ delay(espera);
+ Serial.print("/ "); //adiciona uma barra para separar as palavras Morse
+ break;
+ default: //Caso não encontre o caractere digitado, irá pular para o próximo digito
+ delay(250); //Espera 250 milissegundo
+ break;
+
+  }
+}
+
+//Função que vai se repetir até o número total de digitos
+
+void LerDados() {  //Função para ler cada caractere da string
+  esteira.write(10); //Motor da esteira vai começar a rodar
+  delay(1000); //Um segundo depois a impressora vai começar a registrar o codigo Morse
+  TotalDeDados = EntradaDeDados.length(); //Vai pegar o tamanho total da escrita
+  for (int x = 0; x <= TotalDeDados; x++){ //Vai repetir o procedimento até chegar o fim do tamanho total da escrita
+    i = EntradaDeDados.charAt(x);  //O código charAt obtem o caractere na posição x
+    Letras(); //Chama a função Letras() que reproduz a Letra em código Morse
+  }
+}
+
+
+//Função que Vai ser reproduzida sempre
+void loop() {
+
+while (Serial.available()) {  //Retorna os caracteres disponíveis para leitura da porta serial
+  char Digito = (char)Serial.read(); //Vai pegar um novo caractere
+  EntradaDeDados += Digito;  //adiciona o Digito mais EntradaDeDados no Valor da EntradaDeDados
+  if (Digito == '\n') {   //Se o Digito for igual a \n os seguintes passos serão realizados
+    Serial.println(EntradaDeDados);   //Repete a palavra escrita no portal serial
+    LerDados(); //Chama a função LerDados
+    Serial.println(); //Pula uma linha entre uma escrita e outra
+   }
+  }
+
+delay(1000); //atraso entre as strings
+EntradaDeDados = ""; //Redefine a string para ler novamente
+esteira.write(90); //Motor da esteira vai ficar parado na posição configurada
+}
+//Terminamos
