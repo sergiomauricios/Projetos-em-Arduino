@@ -1,0 +1,116 @@
+#include <Servo.h> // Biblioteca para o servo motor
+/*
+ *
+ENGENHARIA DE TELECOMUNICAÇÕES - UNIVERSIDADE FEDERAL DE SANTA MARIA - ESTUDANTE: SERGIO MAURICIO - 2022
+*/
+          
+Servo ServoDirEsquerda;    // define uma variável para mapear o servo
+int leftRightPos = 0;      // defina uma variável para armazenar a posição do servo
+const int NumDeLeituras = 10;  // defina uma variável para o número de leituras a serem feitas
+int index = 0;                 // o índice da leitura estantaneo
+int total = 0;                   // o total de todas as leituras
+int average = 0;                 // média das leituras
+int echoPin = 11;                // pin echo modulo hc-04 
+int initPin = 10;                // pin trig modulo hc-04 
+int buzzer = 9;                  // pin para o Auto-falante
+int tone1 = 1300;                // define o primeiro tom
+int tone2 = 700;                 // define o segundo tom
+unsigned long TempoDePulso = 0;  // variável para leitura do pulso
+unsigned long distancia = 0;     // variável para armazenar distância
+ 
+/* configura os pinos, servo e porta serial */
+void setup() {
+  ServoDirEsquerda.attach(12); // Define o micro-servo no pino 12
+  pinMode(initPin, OUTPUT);    // transforma o pino de inicialização em uma saída:
+  pinMode(echoPin, INPUT);     // torna o pino de eco uma entrada:
+  Serial.begin(9600);          // inicializa a porta serial:
+} 
+ 
+
+/* começar a girar o servo e obter os valores do sensor */
+void loop() {
+  for(leftRightPos =0; leftRightPos <= 180; leftRightPos += 1) {  // indo da esquerda para a direita.
+    ServoDirEsquerda.write(leftRightPos);                //envia o comando da posição para o micro-servo motor
+      for (index = 0; index<=NumDeLeituras;index++) {    // pega um número x de leituras do sensor e faz a média
+        digitalWrite(initPin, LOW);                      // desliga o sinal
+        delayMicroseconds(50);                           // espere 50 microssegundos para ele retornar
+        digitalWrite(initPin, HIGH);                     // enviar sinal
+        delayMicroseconds(50);                           // espere 50 microssegundos para ele retornar
+        digitalWrite(initPin, LOW);                      // sinal de fechamento
+        TempoDePulso = pulseIn(echoPin, HIGH);           //"pulseIn(echoPin, HIGH)" é uma função especial para medir a largura de um pulso.
+        distancia = TempoDePulso/58;                     // converter para centímetros
+        total = total + distancia;                       // Atualização total
+        delay(10);                                       // espere 10 microssegundos para ele retornar
+      }
+    average = total/NumDeLeituras;         // criar leitura média
+ 
+    if (index >= NumDeLeituras)  {         // redefinir as contagens quando no último item da matriz
+      index = 0;                           // Define a variavel index igual a zero a cada leitura
+      total = 0;                           // Define a variavel total igual a zero a cada leitura
+    }
+     distancia = distancia;                // a variavel distancia, vai receber o valor da distância
+    if (distancia <= 50){                  // se a distância for inferior a 50, o buzzer será acionado
+      digitalWrite(buzzer, HIGH);          // buzzer será acionado
+      tone (buzzer, tone1);                // aciona o buzzer com o tom tone1
+      delay(50);                           // espere 50 microssegundos para ele retornar
+      tone (buzzer,tone2);                 // aciona o buzzer com o tom tone2
+    }
+     else{                                 // Caso a comparação não seja verdadeira
+    digitalWrite(buzzer, LOW);             // o buzzer será deslida
+    noTone (buzzer);                       // define o tom desligado
+  }
+    //Serial.println("posicao do servo para esquerda:"); // imprima a escrita no monitor serial
+    Serial.print("X");                 // envia a informação para o processamento de sinais
+    Serial.print(leftRightPos);          // fornece a informação da posição atual do servo no monitor e processamento de sinais
+    //Serial.println("º");                 // adiciona o simbolo de graus
+    //Serial.println("Distancia do Alvo"); // fornece a posição atual da distância
+    //Serial.print(distancia);             // fornece a posição atual da distância
+    //Serial.println("cm");                // média de leituras do sensor
+    Serial.print("V");                 // envia a informação para o processamento de sinais
+    Serial.println(average);           // envia a informação para o processamento de sinais
+  }
+ /*
+   começar a ir da direita para a esquerda depois de chegarmos a 180 graus
+   mesmo código acima
+   */
+  for(leftRightPos = 180; leftRightPos >=0; leftRightPos -= 1) {  // indo da direita para a esquerda
+    ServoDirEsquerda.write(leftRightPos);       //envia o comando da posição para o micro-servo motor
+    for (index = 0; index<=NumDeLeituras;index++) {   // pega um número x de leituras do sensor e faz a média
+      digitalWrite(initPin, LOW);                   // desliga o sinal
+      delayMicroseconds(50);                        // espere 50 microssegundos para ele retornar
+      digitalWrite(initPin, HIGH);                  // enviar sinal
+      delayMicroseconds(50);                        // espere 50 microssegundos para ele retornar
+      digitalWrite(initPin, LOW);                   // sinal de fechamento
+      TempoDePulso = pulseIn(echoPin, HIGH);        // calcule o tempo para o sinal retornar
+      distancia = TempoDePulso/58;                  // converter para centímetros
+      total = total + distancia;                    // Atualização total
+      delay(10);                                    // espere 10 microssegundos para ele retornar
+    }
+    average = total/NumDeLeituras;         // criar leitura média  
+    if (index >= NumDeLeituras)  {         // redefinir as contagens quando no último item da matriz
+      index = 0;                           // Define a variavel index igual a zero a cada leitura
+      total = 0;                           // Define a variavel total igual a zero a cada leitura
+
+    }
+     distancia = distancia;            // a variavel distancia, vai receber o valor da distância
+    if (distancia <= 50){              // se a distância for inferior a 50, o buzzer será acionado
+     digitalWrite(buzzer, HIGH);       // buzzer será acionado 
+     tone (buzzer, tone1);             // aciona o buzzer com o tom tone1
+     delay(50);                        // espere 50 microssegundos para ele retornar
+     tone (buzzer,tone2);              // aciona o buzzer com o tom tone2
+    }
+  else{                                // Caso a comparação não seja verdadeira  
+    digitalWrite(buzzer, LOW);         // o buzzer será deslida
+    noTone (buzzer);                   // define o tom desligado
+  }
+    //Serial.println("posicao do servo para esquerda:"); // imprima a escrita no monitor serial
+    Serial.print("X");               // envia a informação para o processamento de sinais
+    Serial.print(leftRightPos);       // fornece a informação da posição atual do servo no monitor e processamento de sinais
+    //Serial.println("º");             // adiciona o simbolo de graus
+    //Serial.println("Distancia do Alvo");  // fornece a posição atual da distância
+    //Serial.print(distancia);              // fornece a posição atual da distância
+    //Serial.println("cm");                 // média de leituras do sensor
+    Serial.print("V");                  // envia a informação para o processamento de sinais
+    Serial.println(average);            // envia a informação para o processamento de sinais
+   }
+}
